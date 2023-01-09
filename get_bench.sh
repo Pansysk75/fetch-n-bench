@@ -16,11 +16,12 @@ set -e
 cd "$(dirname "$0")"
 
 if ! test -d benchmark; then
-        echo "Cloning benchmark from GitHub"
-        git clone https://github.com/Pansysk75/HPX-Performance-Benchmarks benchmark
-        check_error "clone the benchmark repository from GitHub"
+  echo "Cloning benchmark from GitHub"
+  git clone https://github.com/Pansysk75/HPX-Performance-Benchmarks benchmark
+  check_error "clone the benchmark repository from GitHub"
 else
-        echo "A benchmark directory was found, attempting to build it"
+  echo "A benchmark directory was found, it will be cleaned, built and installed."
+  rm -rf benchmark/build benchmark/install benchmark/results.csv
 fi
 
 # Change to the build directory
@@ -31,7 +32,9 @@ cd build
 # Run CMake to configure the HPX build
 HPX_DIR=../../hpx/install/ \
 cmake -DCMAKE_INSTALL_PREFIX=../install/ \
+      -DCMAKE_BUILD_TYPE=Release \
       -GNinja \
+      -DBUILD_SCHED_EXEC=OFF \
       ..
       
 check_error "configure the benchmark build with CMake"

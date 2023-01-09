@@ -19,12 +19,16 @@ set -e
 cd "$(dirname "$0")"
 
 if ! test -d hpx; then
-        echo "Cloning HPX from GitHub"
-        git clone -b "$branch" https://github.com/STEllAR-GROUP/hpx.git
-        check_error "clone the HPX repository from GitHub"
-else
-        echo "An hpx directory was found, attempting to build it"
+  echo "Cloning HPX from GitHub"
+  git clone https://github.com/STEllAR-GROUP/hpx.git
+  git -C hpx checkout "$branch" 
+  check_error "clone the HPX repository from GitHub"
+else 
+  #clear existing build/install folders and checkout branch
+  rm -rf hpx/build hpx/install
+  git -C hpx checkout "$branch"
 fi
+
 
 # Change to the build directory
 cd hpx
